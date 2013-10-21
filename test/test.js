@@ -267,7 +267,9 @@ describe('defaults', function() {
       },
       aField: {
         type: String,
-        default: "mmm"
+        default: function() {
+          return "mmm";
+        }
       },
       anotherField: {
         type: String,
@@ -376,6 +378,18 @@ describe('Validators', function() {
   });
   
   
+  it('should not validate if number is NaN', function() {
+    var TestModel = minimodel.Model.extend({
+      id: {
+        type: Number
+      }
+    });
+    
+    var model = new TestModel({id: "asdqweasd"});
+    expect(model.validate()).to.have.deep.property("errors.id.type", "wrong_type");
+  });
+  
+  
   it('should not validate if custom validation fail', function() {
     var TestModel = minimodel.Model.extend({
       id: {
@@ -390,6 +404,51 @@ describe('Validators', function() {
     
     var model = new TestModel({id: "a"});
     expect(model.validate()).to.have.deep.property("errors.id");
+  });
+});
+
+
+describe('Exporters', function() {
+
+  it('should export all concrete fields', function() {
+    var Post = minimodel.Model.extend({
+      nr: Number
+    });
+    var post = new Post({nr: "7"});
+    expect(post.toJson()).to.have.property('nr', 7);
+    expect(post.toObject()).to.have.property('nr', 7);
+    expect(post.toDb()).to.have.property('nr', 7);
+  });
+  
+  it('should not export virtuals by default', function() {
+    var Post = minimodel.Model.extend({
+      nr: Number,
+      v: {
+        type: minimodel.Types.Virtual,
+        get: function() {
+          return "1";
+        }
+      }
+    });
+    var post = new Post({nr: "7"});
+    expect(post.toJson()).to.not.have.property('v');
+    expect(post.toObject()).to.not.have.property('v');
+    expect(post.toDb()).to.not.have.property('v');
+  });
+  
+  it('should export virtuals if explicitly specified', function() {
+    var Post = minimodel.Model.extend({
+      nr: Number,
+      v: {
+        type: minimodel.Types.Virtual,
+        get: function() {
+          return "1";
+        },
+        includeInJson: true
+      }
+    });
+    var post = new Post({nr: "7"});
+    expect(post.toJson()).to.have.property('v', "1");
   });
 });
 

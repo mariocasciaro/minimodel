@@ -24,7 +24,7 @@
     "istanbul": "0.1.44"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha test/*.js --reporter spec"
+    "test": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --report html -- -R spec"
   },
   "testling": {
     "browsers": [
