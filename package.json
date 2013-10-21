@@ -1,0 +1,33 @@
+{
+  "name": "minimodel",
+  "description": "Minimal, database agnostic Models for Node.js (and the Browser)",
+  "version": "0.1.0",
+  "author": {
+    "name": "Mario Casciaro"
+  },
+  "main": "lib",
+  "homepage": "https://github.com/mariocasciaro/minimodel",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mariocasciaro/minimodel.git"
+  },
+  "dependencies": {
+    "inherits": "~2.0.1",
+    "object-path": "~0.1.2",
+    "extend": "~1.2.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.13.0",
+    "chai": "~1.8.0"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha test/*.js --reporter spec"
+  },
+  "keywords": [
+    "model",
+    "lightweight",
+    "models",
+    "domain model"
+  ],
+  "license": "MIT"
+}
