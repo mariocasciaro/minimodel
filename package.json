@@ -14,12 +14,14 @@
   "dependencies": {
     "inherits": "~2.0.1",
     "object-path": "~0.1.2",
-    "extend": "~1.2.1",
-    "mocha-lcov-reporter": "0.0.1"
+    "extend": "~1.2.1"
   },
   "devDependencies": {
     "mocha": "~1.13.0",
-    "chai": "~1.8.0"
+    "chai": "~1.8.0",
+    "mocha-lcov-reporter": "0.0.1",
+    "coveralls": "2.3.0",
+    "istanbul": "0.1.44"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha test/*.js --reporter spec"
