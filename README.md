@@ -23,6 +23,7 @@ Features:
 
 [![Build Status](https://travis-ci.org/mariocasciaro/minimodel.png)](https://travis-ci.org/mariocasciaro/minimodel) [![Dependency Status](https://david-dm.org/mariocasciaro/minimodel.png)](https://david-dm.org/mariocasciaro/minimodel)
 
+[![browser support](http://ci.testling.com/mariocasciaro/minimodel.png)](http://ci.testling.com/mariocasciaro/minimodel)
 
 # Stability
 

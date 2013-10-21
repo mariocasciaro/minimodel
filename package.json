@@ -23,11 +23,21 @@
   "scripts": {
     "test": "node_modules/.bin/mocha test/*.js --reporter spec"
   },
+  "testling": {
+    "browsers": [
+        "ie7", "ie8", "ie9",
+        "firefox/15", "chrome/22", "opera/12", "safari/5.1"
+    ],
+    "harness" : "mocha",
+    "files": "test/*.js"
+  },
   "keywords": [
     "model",
     "lightweight",
     "models",
-    "domain model"
+    "domain model",
+    "schema",
+    "validation"
   ],
   "license": "MIT"
 }
