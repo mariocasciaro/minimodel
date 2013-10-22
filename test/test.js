@@ -115,7 +115,51 @@ describe('handling wrong descriptors', function() {
   });
 });
 
+describe('access using properties', function() {
+  var Post, post;
 
+  beforeEach(function() {
+    Post = minimodel.Model.extend({
+      title: {
+        type: String
+      },
+      nested: {
+        type: {
+          type: String
+        }
+      }
+    });
+    post = new Post({title: "blah", nested: {type: "test"}});
+  });
+
+
+  it('should get the value using property accessor', function() {
+    expect(post.title).to.be.equal('blah');
+  });
+
+  it('should set the value using property accessor', function() {
+    post.title = 'blah+';
+    expect(post.title).to.be.equal('blah+');
+  });
+
+  it('should get entire nested objects using property accessor', function() {
+    expect(post.nested).to.have.property('type','test');
+  });
+
+  it('should get the value of nested fields using property accessor', function() {
+    expect(post.nested.type).to.be.equal('test');
+  });
+
+  it('should set the value of nested fields using property accessor', function() {
+    post.nested.type = 'test+';
+    expect(post.nested.type).to.be.equal('test+');
+  });
+
+  it('should set entire nested objects', function() {
+    post.nested = {type: 'test+'};
+    expect(post.nested.type).to.be.equal('test+');
+  });
+});
 
 describe('field getters/setters', function() {
 
@@ -204,49 +248,6 @@ describe('Virtuals', function() {
 
     var model = new TestModel();
     expect(model.toObject()).to.be.empty;
-  });
-});
-
-
-describe('access using properties', function() {
-  var Post, post;
-
-  beforeEach(function() {
-    Post = minimodel.Model.extend({
-      title: {
-        type: String
-      },
-      nested: {
-        type: {
-          type: String
-        }
-      },
-    });
-    post = new Post({title: "blah", nested: {type: "test"}});
-  });
-
-
-  it('should get the value using property accessor', function() {
-    expect(post.title).to.be.equal('blah');
-  });
-  
-  it('should set the value using property accessor', function() {
-    post.title = 'blah+';
-    expect(post.title).to.be.equal('blah+');
-  });
-  
-  it('should get the value of nested fields using property accessor', function() {
-    expect(post.nested.type).to.be.equal('test');
-  });
-  
-  it('should set the value of nested fields using property accessor', function() {
-    post.nested.type = 'test+';
-    expect(post.nested.type).to.be.equal('test+');
-  });
-  
-  it('should set entire nested objects', function() {
-    post.nested = {type: 'test+'};
-    expect(post.nested.type).to.be.equal('test+');
   });
 });
 
@@ -405,6 +406,19 @@ describe('Validators', function() {
     var model = new TestModel({id: "a"});
     expect(model.validate()).to.have.deep.property("errors.id");
   });
+
+
+  it('should return a meaningful error message', function() {
+    var TestModel = minimodel.Model.extend({
+      id: {
+        type: String,
+        required: true
+      }
+    });
+
+    var model = new TestModel({id: ""});
+    expect(model.validate().message).to.contain("The field is required");
+  });
 });
 
 
@@ -412,11 +426,15 @@ describe('Exporters', function() {
 
   it('should export all concrete fields', function() {
     var Post = minimodel.Model.extend({
-      nr: Number
+      nr: Number,
+      nested: {
+        obj: String
+      }
     });
-    var post = new Post({nr: "7"});
+    var post = new Post({nr: "7", nested: {obj: "a"}});
     expect(post.toJson()).to.have.property('nr', 7);
     expect(post.toObject()).to.have.property('nr', 7);
+    expect(post.toObject()).to.have.deep.property('nested.obj', "a");
     expect(post.toDb()).to.have.property('nr', 7);
   });
   
@@ -436,19 +454,16 @@ describe('Exporters', function() {
     expect(post.toDb()).to.not.have.property('v');
   });
   
-  it('should export virtuals if explicitly specified', function() {
+  it('exported objects should not modify Model', function() {
     var Post = minimodel.Model.extend({
       nr: Number,
-      v: {
-        type: minimodel.Types.Virtual,
-        get: function() {
-          return "1";
-        },
-        includeInJson: true
+      nested: {
+        obj: String
       }
     });
-    var post = new Post({nr: "7"});
-    expect(post.toJson()).to.have.property('v', "1");
+    var post = new Post({nr: "7", nested: {obj: "a"}});
+    var obj = post.toJson();
+    obj.nested.obj = "b";
+    expect(post.nested).to.have.property('obj','a');
   });
 });
-
