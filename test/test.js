@@ -302,15 +302,15 @@ describe('Date field', function() {
   });
   
   it('should set date from string', function() {
-    var post = new Post({date: "1382354005"});
+    var post = new Post({date: "1372354005"});
     expect(post.date).to.be.instanceof(Date);
-    expect(post.date.toString()).to.contain("Fri Jan 16 1970 23:59:14 GMT+0000");
+    expect(post.date.toString()).to.be.equal(new Date(1372354005).toString());
   });
   
   it('should set date from number', function() {
-    var post = new Post({date: 1382354005});
+    var post = new Post({date: 1372354005});
     expect(post.date).to.be.instanceof(Date);
-    expect(post.date.toString()).to.contain("Fri Jan 16 1970 23:59:14 GMT+0000");
+    expect(post.date.toString()).to.be.equal(new Date(1372354005).toString());
   });
 });
 

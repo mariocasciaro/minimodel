@@ -21,9 +21,11 @@ Features:
 
 [![NPM](https://nodei.co/npm/minimodel.png?downloads=true)](https://nodei.co/npm/minimodel/)
 
-[![Build Status](https://travis-ci.org/mariocasciaro/minimodel.png)](https://travis-ci.org/mariocasciaro/minimodel) [![Dependency Status](https://david-dm.org/mariocasciaro/minimodel.png)](https://david-dm.org/mariocasciaro/minimodel) [![Coverage Status](https://coveralls.io/repos/mariocasciaro/minimodel/badge.png)](https://coveralls.io/r/mariocasciaro/minimodel)
+[![Build Status](https://travis-ci.org/mariocasciaro/minimodel.png)](https://travis-ci.org/mariocasciaro/minimodel)
+[![Dependency Status](https://david-dm.org/mariocasciaro/minimodel.png)](https://david-dm.org/mariocasciaro/minimodel) 
+[![Coverage Status](https://coveralls.io/repos/mariocasciaro/minimodel/badge.png)](https://coveralls.io/r/mariocasciaro/minimodel)
 
-[![browser support](http://ci.testling.com/mariocasciaro/minimodel.png)](http://ci.testling.com/mariocasciaro/minimodel)
+[![browser support](https://ci.testling.com/mariocasciaro/minimodel.png)](http://ci.testling.com/mariocasciaro/minimodel)
 
 # Stability
 
