@@ -29,9 +29,9 @@
   "testling": {
     "browsers": {
       "ie": [7, 8, 9],
-      "firefox": [10, 15, 22, 24],
-      "chrome": [30, 29, 22],
-      "safari": [5.0, 5.1 , 6.0],
+      "firefox": [10, 15, 24],
+      "chrome": [30, 22],
+      "safari": [5.0, 6.0],
       "opera": [12, 15],
       "iphone": [6.0],
       "android-browser": [4.2]

@@ -467,3 +467,32 @@ describe('Exporters', function() {
     expect(post.nested).to.have.property('obj','a');
   });
 });
+
+
+describe('ModelsArray', function() {
+  var Post;
+  beforeEach(function() {
+    Post = minimodel.Model.extend({
+      nr: Number,
+      nested: {
+        obj: String
+      }
+    });
+  });
+  
+  
+  it('should export all models in the array', function() {
+    var post1 = new Post({nr: "7", nested: {obj: "a"}});
+    var post2 = new Post({nr: "8", nested: {obj: "b"}});
+    var arr = new minimodel.ModelsArray();
+    arr.push(post1, post2);
+    
+    expect(arr.toJson()).to.have.length(2);
+    expect(arr.toJson()).to.have.deep.property('0.nr', 7);
+    expect(arr.toJson()).to.have.deep.property('0.nested.obj', "a");
+    expect(arr.toJson()).to.have.deep.property('1.nr', 8);
+    
+    expect(arr.toObject()).to.have.deep.property('0.nr', 7);
+    expect(arr.toDb()).to.have.deep.property('1.nested.obj', "b");
+  });
+});
