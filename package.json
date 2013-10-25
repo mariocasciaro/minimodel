@@ -29,13 +29,11 @@
   "testling": {
     "browsers": {
       "ie": [
-        7,
         8,
         9
       ],
       "firefox": [
         10,
-        15,
         24
       ],
       "chrome": [
@@ -47,7 +45,6 @@
         6
       ],
       "opera": [
-        12,
         15
       ],
       "iphone": [

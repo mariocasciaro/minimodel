@@ -327,13 +327,13 @@ describe('Number field', function() {
   
   it('should set number from string', function() {
     var post = new Post({nr: "7"});
-    expect(typeof post.nr === 'number');
+    expect(typeof post.nr === 'number').to.be.true;
     expect(post.nr).to.be.equal(7);
   });
   
   it('should set number from number', function() {
     var post = new Post({nr: 7});
-    expect(typeof post.nr === 'number');
+    expect(typeof post.nr === 'number').to.be.true;
     expect(post.nr).to.be.equal(7);
   });
 });
