@@ -338,6 +338,50 @@ describe('Number field', function() {
   });
 });
 
+
+describe('Boolean field', function() {
+  var Post;
+
+  beforeEach(function() {
+    Post = minimodel.Model.extend({
+      b: Boolean
+    });
+  });
+
+  it('should set boolean from boolean', function() {
+    var post = new Post({b: true});
+    expect(typeof post.b).to.be.equal("boolean");
+    expect(post.b).to.be.true;
+  });
+
+  it('should set boolean from string (true)', function() {
+    var post = new Post({b: "true"});
+    expect(typeof post.b).to.be.equal("boolean");
+    expect(post.b).to.be.true;
+  });
+
+  it('should set boolean from string (false)', function() {
+    var post = new Post({b: "false"});
+    expect(typeof post.b).to.be.equal("boolean");
+    expect(post.b).to.be.false;
+  });
+
+  it('should not set boolean from string if unknown value (string)', function() {
+    var post = new Post({b: "falsee"});
+    expect(post.b).to.be.undefined;
+  });
+
+  it('should not set boolean from string if unknown value (obj)', function() {
+    var post = new Post({b: {}});
+    expect(post.b).to.be.undefined;
+  });
+
+  it('should validate if a bool', function() {
+    var post = new Post({b: true});
+    expect(post.validate()).to.be.undefined;
+  });
+});
+
 describe('Validators', function() {
   it('should not validate if empty value and required is set', function() {
     var TestModel = minimodel.Model.extend({
@@ -494,5 +538,208 @@ describe('ModelsArray', function() {
     
     expect(arr.toObject()).to.have.deep.property('0.nr', 7);
     expect(arr.toDb()).to.have.deep.property('1.nested.obj', "b");
+  });
+});
+
+
+describe('Array Field', function() {
+  describe('simple typed array elements', function() {
+    var Post;
+    beforeEach(function() {
+      Post = minimodel.Model.extend({
+        nr: Number,
+        comments: [String]
+      });
+    });
+
+    it('should set an array from constructor and retrieve from property', function() {
+      var post = new Post({nr: "7", comments: ["aa", "aaa"]});
+
+      expect(post.nr).to.be.equal(7);
+      expect(post.comments[1]).to.be.equal("aaa");
+    });
+
+    it('should set an array from setter', function() {
+      var post = new Post({nr: "7", comments: ["aa", "aaa"]});
+      post.set('comments', ["bbb"]);
+
+      expect(post.comments[0]).to.be.equal("bbb");
+    });
+
+    it('should replace an array element from setter', function() {
+      var post = new Post({nr: "7", comments: ["aa", "aaa"]});
+      post.set('comments.1', ["ccc"]);
+
+      expect(post.comments).to.have.length(2);
+      expect(post.comments[1]).to.be.equal("ccc");
+    });
+
+    it('should set a new array element from setter', function() {
+      var post = new Post({nr: "7", comments: ["aa", "aaa"]});
+      post.set('comments.2', ["ccc"]);
+
+      expect(post.comments).to.have.length(3);
+      expect(post.comments[2]).to.be.equal("ccc");
+    });
+
+    //skipped because not supported
+    it.skip('should set an array element from property setter', function() {
+      var post = new Post({nr: "7", comments: ["aa", "aaa"]});
+      post.comments[1] = "ccc";
+
+      expect(post.comments).to.have.length(2);
+      expect(post.comments[1]).to.be.equal("ccc");
+    });
+
+    it('should assign entire array from property', function() {
+      var post = new Post({nr: "7", comments: ["aa", "aaa"]});
+      post.comments = ["ccc"];
+
+      expect(post.get('comments')).to.have.length(1);
+      expect(post.comments[0]).to.be.equal("ccc");
+    });
+  });
+
+
+  describe('complex array elements', function() {
+    var Post, post;
+    beforeEach(function() {
+      Post = minimodel.Model.extend({
+        nr: Number,
+        comments: {
+          type: [
+            {
+              astring: String,
+              anum: {
+                type: Number,
+                includeInJson: false
+              }
+            }
+          ],
+          includeInDb: false
+        }
+      });
+
+      post = new Post({nr: "7", comments: [
+        {
+          astring: "aaa",
+          anum: "8"
+        }, {
+          astring: "bbb",
+          anum: "9"
+        }
+      ]});
+    });
+
+    it('should set an array from constructor and retrieve from property', function() {
+      expect(post.nr).to.be.equal(7);
+      expect(post.comments).to.have.length(2);
+      expect(post.comments[1].astring).to.be.equal("bbb");
+      expect(post.comments[1].anum).to.be.equal(9);
+    });
+
+
+    it('should set a property of an element from property accessor', function() {
+      post.comments[1].astring = "ddd";
+      expect(post.get('comments.1.astring')).to.be.equal("ddd");
+    });
+
+
+    it('should export values', function() {
+      var exported = post.toObject();
+
+      expect(exported.comments).to.have.length(2);
+      expect(exported.comments[1].astring).to.be.equal("bbb");
+      expect(exported.comments[1].anum).to.be.equal(9);
+    });
+
+    it('should not export excluded values', function() {
+      var exported = post.toJson();
+
+      expect(exported.comments).to.have.length(2);
+      expect(exported.comments[1].astring).to.be.equal("bbb");
+      expect(exported.comments[1].anum).to.be.undefined;
+    });
+
+    it('should not export the entire array', function() {
+      var exported = post.toDb();
+
+      expect(exported.comments).to.be.undefined;
+    });
+  });
+
+  describe('validation', function() {
+    it('should validate simple elements', function() {
+      var Post = minimodel.Model.extend({
+        arr: [Number]
+      });
+      
+      var post = new Post({arr: ["1", "asd"]});
+      expect(post.validate()).to.not.have.deep.property("errors.arr.errors.0");
+      expect(post.validate()).to.have.deep.property("errors.arr.errors.1");
+    });
+  });
+});
+
+
+describe('Dynamic property definition', function() {
+  it('should define a simple property after model definition', function() {
+    var Model = minimodel.Model.extend({
+      nr: Number
+    });
+    Model.property('aprop', String);
+    
+    var model = new Model({nr: "7", aprop: "tessst"});
+    expect(model.nr).to.be.equal(7);
+    expect(model.aprop).to.be.equal("tessst");
+  });
+
+
+  it('should define a complex property after model definition', function() {
+    var Model = minimodel.Model.extend({
+      nr: Number
+    });
+    Model.property('aprop', {
+      p1: {
+        type: String
+      },
+      p2: Number
+    });
+
+    var model = new Model({nr: "7", aprop: {p1: "tessst", p2: "3"}});
+    expect(model.nr).to.be.equal(7);
+    expect(model.aprop.p1).to.be.equal("tessst");
+    expect(model.aprop.p2).to.be.equal(3);
+  });
+
+  it('should modify existing simple properties', function() {
+    var Model = minimodel.Model.extend({
+      nr: Number
+    });
+    Model.property('nr', String);
+
+    var model = new Model({nr: "7"});
+    expect(model.nr).to.be.equal("7");
+  });
+
+  it('should modify nested existing properties', function() {
+    var Model = minimodel.Model.extend({
+      p: {
+        p1: {
+          type: String
+        },
+        p2: String
+      }
+    });
+    Model.property('p.p1', {
+      type: Number,
+      set: function(val) {
+        this.setRaw(val + 1);
+      }
+    });
+
+    var model = new Model({p: {p1: "7", p2: "3"}});
+    expect(model.p.p1).to.be.equal(8);
+    expect(model.p.p2).to.be.equal("3");
   });
 });
