@@ -1,15 +1,21 @@
+[![NPM version](https://badge.fury.io/js/minimodel.png)](http://badge.fury.io/js/minimodel)
+[![Build Status](https://travis-ci.org/mariocasciaro/minimodel.png)](https://travis-ci.org/mariocasciaro/minimodel)
+[![Coverage Status](https://coveralls.io/repos/mariocasciaro/minimodel/badge.png)](https://coveralls.io/r/mariocasciaro/minimodel)
+[![Dependency Status](https://gemnasium.com/mariocasciaro/minimodel.png)](https://gemnasium.com/mariocasciaro/minimodel)
+
+[![browser support](https://ci.testling.com/mariocasciaro/minimodel.png)](http://ci.testling.com/mariocasciaro/minimodel)
 
 # Synopsis
 
 Minimal, database agnostic Models for Node.js and the Browser. 
 
-The idea is to implement a Domain Model System that is totally database agnostic, 
-so no `save()`, no `retrieve()`, no complex way to build relationships are provided.
-This module is ideal if you have a service/DAO layer and you want to have models for just validation, 
-type checking/casting, transformations etc.
+The idea is to implement a Domain Model System that is really database agnostic, 
+with models without `save()`, `retrieve()` or things like that.
+This module is ideal if your architecture includes a service/DAO layer and you want to have models for just validation, 
+type checking/casting, transformations or if you want to combine data coming from different DBs/sources.
 
 Ideally, since the Models are not responsible for persistence (and do not contain any logic related to persistance)
- it shold be easier to share the models between server and client.
+ it should be easier to share the models between server and client.
 
 Features:
   * Define schemas with a syntax similar to Mongoose's
@@ -18,14 +24,6 @@ Features:
   * Validation
   * Virtuals
   * Custom getters/setters
-
-[![NPM](https://nodei.co/npm/minimodel.png?downloads=true)](https://nodei.co/npm/minimodel/)
-
-[![Build Status](https://travis-ci.org/mariocasciaro/minimodel.png)](https://travis-ci.org/mariocasciaro/minimodel)
-[![Dependency Status](https://david-dm.org/mariocasciaro/minimodel.png)](https://david-dm.org/mariocasciaro/minimodel) 
-[![Coverage Status](https://coveralls.io/repos/mariocasciaro/minimodel/badge.png)](https://coveralls.io/r/mariocasciaro/minimodel)
-
-[![browser support](https://ci.testling.com/mariocasciaro/minimodel.png)](http://ci.testling.com/mariocasciaro/minimodel)
 
 # Stability
 
