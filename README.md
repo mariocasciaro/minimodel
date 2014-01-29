@@ -5,19 +5,19 @@
 
 [![browser support](https://ci.testling.com/mariocasciaro/minimodel.png)](http://ci.testling.com/mariocasciaro/minimodel)
 
-# Synopsis
+# Minimodel
 
 Minimal, database agnostic Models for Node.js and the Browser. 
 
-The idea is to implement a Domain Model System that is really database agnostic, 
-with models without `save()`, `retrieve()` or things like that.
-This module is ideal if your architecture includes a service/DAO layer and you want to have models for just validation, 
-type checking/casting, transformations or if you want to combine data coming from different DBs/sources.
+The idea is to implement a Domain Model System that is persitence agnostic, to be used only for validation, type casting, transormations, and business logic. By using `minimodel`, persintence (if relevant) has to be delegated to an external component (e.g. DAO/Services).
 
-Ideally, since the Models are not responsible for persistence (and do not contain any logic related to persistance)
- it should be easier to share the models between server and client.
+__Advantages__
 
-Features:
+* The same model can be retrieved from different data sources 
+* Easily reuse the same models in the Browser
+* Custom persitence allows more fine grained and powerful queries (instead of using an imposed ORM style querying system)
+
+__Features__
   * Define schemas with a syntax similar to Mongoose's
   * Type checking/casting
   * Defaults
@@ -25,16 +25,12 @@ Features:
   * Virtuals
   * Custom getters/setters
 
-# Stability
-
-**Experimental**: use at your own risk
-
 ## Usage
 
 ```javascript
 var minimodel = require('minimodel');
 
-var Post = minimodel.Model.extend({
+var Post = minimodel.define({
   id: {
     //the field is a String
     type: String,
@@ -105,7 +101,18 @@ console.log(post.author.name);
 
 ```
 
-# More to come...
+## Stability
+
+**1 - Experimental**
+
+Please try it out and provide feedback.
+
+## What's new
+
+#### 0.2
+
+* **Breaking changes**:
+    * `validate()` is now an async function. A callback could be given as argument otherwise a promise will be returned.
 
 ---
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mariocasciaro/minimodel/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

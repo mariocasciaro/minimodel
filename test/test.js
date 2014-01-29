@@ -376,14 +376,14 @@ describe('Boolean field', function() {
     expect(post.b).to.be.undefined;
   });
 
-  it('should validate if a bool', function() {
+  it('should validate if a bool', function(done) {
     var post = new Post({b: true});
-    expect(post.validate()).to.be.undefined;
+    post.validate(done);
   });
 });
 
 describe('Validators', function() {
-  it('should not validate if empty value and required is set', function() {
+  it('should throw error if empty value and required is set', function(done) {
     var TestModel = minimodel.Model.extend({
       id: {
         type: String,
@@ -393,12 +393,15 @@ describe('Validators', function() {
     
     var model = new TestModel({});
     expect(model.id).to.not.exist;
-    expect(model.validate()).to.be.instanceof(minimodel.Errors.ModelValidationError);
-    expect(model.validate()).to.have.deep.property("errors.id.type", "required");
+    model.validate(function(e) {
+      expect(e).to.be.instanceof(minimodel.Errors.ModelValidationError);
+      expect(e).to.have.deep.property("errors.id.errors.0.type", "required");
+      done();
+    });
   });
   
   
-  it('should not validate if empty string and required is set', function() {
+  it('should throw error if empty string and required is set (with promise)', function(done) {
     var TestModel = minimodel.Model.extend({
       id: {
         type: String,
@@ -407,11 +410,16 @@ describe('Validators', function() {
     });
     
     var model = new TestModel({id: ""});
-    expect(model.validate()).to.have.deep.property("errors.id.type", "required");
+    model.validate().then(function() {
+      done(new Error("Validated"));
+    }, function(e) {
+      expect(e).to.have.deep.property("errors.id.errors.0.type", "required");
+      done();
+    }).otherwise(done);
   });
   
   
-  it('should not validate if date is not valid date', function() {
+  it('should not validate if date is not valid date', function(done) {
     var TestModel = minimodel.Model.extend({
       id: {
         type: Date
@@ -419,11 +427,14 @@ describe('Validators', function() {
     });
     
     var model = new TestModel({id: "asdqweasd"});
-    expect(model.validate()).to.have.deep.property("errors.id.type", "wrong_type");
+    model.validate(function(e) {
+      expect(e).to.have.deep.property("errors.id.errors.0.type", "wrong_type");
+      done();
+    });
   });
   
   
-  it('should not validate if number is NaN', function() {
+  it('should throw error if number is NaN', function(done) {
     var TestModel = minimodel.Model.extend({
       id: {
         type: Number
@@ -431,28 +442,35 @@ describe('Validators', function() {
     });
     
     var model = new TestModel({id: "asdqweasd"});
-    expect(model.validate()).to.have.deep.property("errors.id.type", "wrong_type");
+    model.validate(function(e) {
+      expect(e).to.have.deep.property("errors.id.errors.0.type", "wrong_type");
+      done();
+    });
   });
   
   
-  it('should not validate if custom validation fail', function() {
+  it('should throw error if custom validation fail', function(done) {
     var TestModel = minimodel.Model.extend({
       id: {
         type: String,
-        validate: function() {
+        validate: function(done) {
           if(this.value.length < 2) {
-            return new Error("Custom validation failed");
+            return done(new Error("Custom validation failed"));
           }
+          done();
         }
       }
     });
     
     var model = new TestModel({id: "a"});
-    expect(model.validate()).to.have.deep.property("errors.id");
+    model.validate().catch(function(e) {
+      expect(e).to.have.deep.property("errors.id");
+      done();
+    }).catch(done);
   });
 
 
-  it('should return a meaningful error message', function() {
+  it('should return a meaningful error message', function(done) {
     var TestModel = minimodel.Model.extend({
       id: {
         type: String,
@@ -461,7 +479,10 @@ describe('Validators', function() {
     });
 
     var model = new TestModel({id: ""});
-    expect(model.validate().message).to.contain("The field is required");
+    model.validate().catch(function(e) {
+      expect(e.message).to.contain("The field is required");
+      done();
+    }).catch(done);
   });
 });
 
@@ -668,15 +689,18 @@ describe('Array Field', function() {
     });
   });
 
-  describe('validation', function() {
+  describe('validation', function(done) {
     it('should validate simple elements', function() {
       var Post = minimodel.Model.extend({
         arr: [Number]
       });
       
       var post = new Post({arr: ["1", "asd"]});
-      expect(post.validate()).to.not.have.deep.property("errors.arr.errors.0");
-      expect(post.validate()).to.have.deep.property("errors.arr.errors.1");
+      post.validate().catch(function(e) {
+        expect(e).to.not.have.deep.property("errors.arr.errors.0");
+        expect(e).to.have.deep.property("errors.arr.errors.1");
+        done();
+      }).catch(done);
     });
   });
 });
