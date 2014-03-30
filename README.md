@@ -113,6 +113,3 @@ Please try it out and provide feedback.
 
 * **Breaking changes**:
     * `validate()` is now an async function. A callback could be given as argument otherwise a promise will be returned.
-
----
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mariocasciaro/minimodel/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

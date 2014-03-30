@@ -15,8 +15,8 @@
     "inherits": "~2.0.1",
     "object-path": "~0.1.2",
     "extend": "~1.2.1",
-    "when": "~2.7.1",
-    "async": "~0.2.10"
+    "when": "~3.0.1",
+    "async": "~0.4.0"
   },
   "devDependencies": {
     "mocha": "~1.13.0",
